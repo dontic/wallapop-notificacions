@@ -255,3 +255,17 @@ CELERY_TASK_SERIALIZER = "json"
 
 # Configure Beat Periodic Tasks in the database
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+
+# ---------------------------------------------------------------------------- #
+#                                   WALLAPOP                                   #
+# ---------------------------------------------------------------------------- #
+WALLAPOP_LATITUDE = os.getenv("WALLAPOP_LATITUDE", "40.416775")  # Default latitude
+WALLAPOP_LONGITUDE = os.getenv("WALLAPOP_LONGITUDE", "-3.703790")  # Default longitude
+
+# ---------------------------------------------------------------------------- #
+#                                     NTFY                                     #
+# ---------------------------------------------------------------------------- #
+NTFY_URL = os.getenv("NTFY_URL", "https://ntfy.sh")
+NTFY_TOPIC = os.getenv("NTFY_TOPIC", "wallapop")
+NTFY_TOKEN = os.getenv("NTFY_TOKEN", None)
