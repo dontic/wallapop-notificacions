@@ -9,6 +9,8 @@ python-dotenv = "*"
 whitenoise = "*"
 celery = "*"
 django-celery-beat = "*"
+requests = "*"
+redis = "*"
 
 [dev-packages]
 
