@@ -1,0 +1,44 @@
+services:
+  # Redis service
+  redis:
+    restart: unless-stopped
+    image: redis:7.2.0-alpine
+
+  django: &django-service # Anchor for base service
+    restart: unless-stopped
+    image: dontic/wallapop-notifications:latest
+    environment: &common-env # Anchor for common environment variables
+      DJANGO_DEBUG: "False"
+      LOGGING_LOG_LEVEL: "INFO"
+      DJANGO_ALLOWED_HOSTS: ""
+      DJANGO_SECRET_KEY: ""
+      WALLAPOP_LATITUDE: ""
+      WALLAPOP_LONGITUDE: ""
+      NTFY_URL: ""
+      NTFY_TOPIC: ""
+      NTFY_TOKEN: ""
+    volumes:
+      - data:/app/data
+    ports:
+      - 8000:8000
+    entrypoint: /app/docker/entrypoints/entrypoint-django.sh
+
+  worker:
+    <<: *django-service # Inherit from base service
+    environment: *common-env # Reuse environment variables
+    entrypoint: /app/docker/entrypoints/entrypoint-worker.sh
+    ports: [] # Override to remove ports
+    depends_on:
+      - redis
+
+  beat:
+    <<: *django-service # Inherit from base service
+    environment: *common-env # Reuse environment variables
+    entrypoint: /app/docker/entrypoints/entrypoint-beat.sh
+    ports: [] # Override to remove ports
+    depends_on:
+      - django
+      - redis
+
+volumes:
+  data:

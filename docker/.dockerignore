@@ -1,0 +1,19 @@
+# Development
+.devcontainer/
+.vscode/
+.git/
+.github/
+__pycache__/
+*.pyc
+
+# Data
+db.sqlite3
+media/
+staticfiles/
+
+# Documentation
+README.md
+
+# Environment
+.env
+.env.*
