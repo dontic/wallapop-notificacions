@@ -82,22 +82,22 @@ def check_wallapop_search(search_id):
         search.save()
 
     if new_items:
-        log.info("Sending notification via NTFY")
-        # Send notification via NTFY
-        notification_text = "New items found:\n\n" + "\n\n".join(
-            f"🏷️ {item['title']}\n💰 {item['price']}\n📍 {item['location']}\n🔗 {item['url']}"
-            for item in new_items
-        )
+        log.info("Sending notifications via NTFY")
+        for item in new_items:
+            notification_text = (
+                f"🏷️ {item['title']}\n💰 {item['price']}\n📍 {item['location']}"
+            )
 
-        requests.post(
-            f"{settings.NTFY_URL}/{settings.NTFY_TOPIC}",
-            data=notification_text.encode(encoding="utf-8"),
-            headers={
-                "Title": f"New items for '{search.keywords}'",
-                "Priority": "default",
-                "Tags": "shopping,new",
-                "Authorization": f"Bearer {settings.NTFY_TOKEN}",
-            },
-        )
+            requests.post(
+                f"{settings.NTFY_URL}/{settings.NTFY_TOPIC}",
+                data=notification_text.encode(encoding="utf-8"),
+                headers={
+                    "Title": f"New item for '{search.keywords}'",
+                    "Priority": "default",
+                    "Tags": "shopping,new",
+                    "Authorization": f"Bearer {settings.NTFY_TOKEN}",
+                    "Actions": f'view,Open in Wallapop,{item["url"]}',
+                },
+            )
 
     return f"Processed {len(new_items)} new items"
