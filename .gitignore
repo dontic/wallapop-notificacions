@@ -1,2 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+
+# Django
+*.log
 .env
+data/
 *.sqlite3
+media/
+staticfiles/
+
+# Development environments
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Virtual Environment
+venv/
+.venv/
+.env/
+.virtualenv/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# System Files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Local development
+local_settings.py
+db.sqlite3-journal
+celerybeat-schedule*
