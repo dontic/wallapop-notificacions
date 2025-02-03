@@ -11,6 +11,7 @@ celery = "*"
 django-celery-beat = "*"
 requests = "*"
 redis = "*"
+gunicorn = "*"
 
 [dev-packages]
 
