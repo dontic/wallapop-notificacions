@@ -76,18 +76,6 @@ LOGGING = {
             "handlers": ["console"],
             "propagate": False,
         },
-        # AutoVisita logger
-        "autovisita": {
-            "level": os.getenv("LOGGING_LOG_LEVEL", "DEBUG"),
-            "handlers": ["console"],
-            "propagate": False,
-        },
-        # Tenants logger
-        "tenants": {
-            "level": os.getenv("LOGGING_LOG_LEVEL", "DEBUG"),
-            "handlers": ["console"],
-            "propagate": False,
-        },
     },
 }
 logging.config.dictConfig(LOGGING)
