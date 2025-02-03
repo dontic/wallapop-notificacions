@@ -3,11 +3,14 @@ from celery import shared_task
 from django.conf import settings
 from datetime import datetime
 from .models import WallapopSearch
+import logging
+
+log = logging.getLogger("app_logger")
 
 
 @shared_task
 def check_wallapop_search(search_id):
-    print(f"Checking Wallapop search {search_id} at {datetime.now()}")
+    log.info(f"Checking Wallapop search with ID {search_id}")
 
     search = WallapopSearch.objects.get(id=search_id)
 
@@ -19,6 +22,7 @@ def check_wallapop_search(search_id):
         "order_by": "newest",
         "source": "search_box",
     }
+    log.debug(f"Requesting Wallapop API with params: {params}")
 
     headers = {
         "Accept": "application/json, text/plain, */*",
@@ -46,10 +50,12 @@ def check_wallapop_search(search_id):
         "https://api.wallapop.com/api/v3/search", params=params, headers=headers
     )
     if not response.ok:
+        log.error(f"Error fetching results: {response.status_code}")
+        log.error(response.text)
         return f"Error fetching results: {response.status_code}"
 
     data = response.json()
-    print(data)
+    log.debug(f"Received data: {data}")
     items = data["data"]["section"]["payload"]["items"]
 
     # Get new items
@@ -68,12 +74,15 @@ def check_wallapop_search(search_id):
             }
         )
 
+    log.debug(f"New items: {new_items}")
+
     if items:
         # Update last_id with the newest item's ID
         search.last_id = items[0]["id"]
         search.save()
 
     if new_items:
+        log.info("Sending notification via NTFY")
         # Send notification via NTFY
         notification_text = "New items found:\n\n" + "\n\n".join(
             f"🏷️ {item['title']}\n💰 {item['price']}\n📍 {item['location']}\n🔗 {item['url']}"
